@@ -69,7 +69,7 @@ STATICFILES_DIRS = [BASE_DIR / "static"]  # static/css/tema.css
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Origens do front (separadas por vírgula), ex.: https://meufront.onrender.com
-CORS_ALLOWED_ORIGINS = _lista("CORS_ALLOWED_ORIGINS", "http://localhost:3000")
+CORS_ALLOWED_ORIGINS = _lista("CORS_ALLOWED_ORIGINS", "http://localhost:3000", "https://hackathon-frontend-production-3958bdc8.up.railway.app/")
 CSRF_TRUSTED_ORIGINS = _lista("CSRF_TRUSTED_ORIGINS")
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
