@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% comment %}Exemplo de página fora do admin usando o mesmo tema.{% endcomment %}
+
+{% block titulo %}Início · Coleta de Ações{% endblock %}
+
+{% block conteudo %}
+<h1>Coleta de Ações</h1>
+<p class="sub">API para registrar usuários, sessões e ações.</p>
+
+<table class="tabela">
+  <tr><th>Método</th><th>Endpoint</th><th>Para quê</th></tr>
+  <tr><td><span class="selo">POST</span></td><td><code>/api/usuarios/</code></td><td>Cadastrar usuário</td></tr>
+  <tr><td><span class="selo">POST</span></td><td><code>/api/sessoes/</code></td><td>Iniciar sessão</td></tr>
+  <tr><td><span class="selo">POST</span></td><td><code>/api/acoes/</code></td><td>Registrar ação (ou lista de ações)</td></tr>
+  <tr><td><span class="selo">POST</span></td><td><code>/api/sessoes/&lt;id&gt;/finalizar/</code></td><td>Finalizar sessão</td></tr>
+</table>
+
+<p style="margin-top:24px">
+  <a class="botao" href="{% url 'admin:index' %}">Abrir o admin</a>
+</p>
+{% endblock %}

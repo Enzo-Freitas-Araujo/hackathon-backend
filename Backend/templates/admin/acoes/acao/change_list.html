@@ -1,0 +1,34 @@
+{% extends "admin/change_list.html" %}
+{% comment %}
+  Lista de ações: mostra um resumo do que está filtrado (cartões + ações por tipo)
+  acima da tabela. Os números vêm de AcaoAdmin.changelist_view (contexto "resumo").
+{% endcomment %}
+
+{% block content %}
+{% if resumo %}
+<div class="resumo">
+  <div class="cartao"><div class="rotulo">Ações {% if cl.is_filtered %}filtradas{% endif %}</div><div class="valor">{{ resumo.total }}</div></div>
+  <div class="cartao"><div class="rotulo">Usuários</div><div class="valor">{{ resumo.usuarios }}</div></div>
+  <div class="cartao"><div class="rotulo">Sessões</div><div class="valor">{{ resumo.sessoes }}</div></div>
+  <div class="cartao"><div class="rotulo">Reação média</div>
+    <div class="valor">{% if resumo.tr is not None %}{{ resumo.tr|floatformat:2 }}<small>s</small>{% else %}—{% endif %}</div></div>
+  <div class="cartao"><div class="rotulo">Resposta média</div>
+    <div class="valor">{% if resumo.tresp is not None %}{{ resumo.tresp|floatformat:2 }}<small>s</small>{% else %}—{% endif %}</div></div>
+</div>
+
+{% if resumo.por_tipo %}
+<div class="barras" role="table" aria-label="Ações por tipo">
+  <h3>Ações por tipo</h3>
+  {% for t in resumo.por_tipo %}
+  <div class="linha" role="row">
+    <span role="cell">{{ t.nome }}</span>
+    <span class="trilho" role="presentation"><span class="preenchido" style="display:block;width:{{ t.pct }}%"></span></span>
+    <span class="n" role="cell">{{ t.n }}</span>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endif %}
+
+{{ block.super }}
+{% endblock %}

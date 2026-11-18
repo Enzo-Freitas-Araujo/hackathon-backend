@@ -1,0 +1,41 @@
+{% load static %}<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}Coleta de Ações{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/tema.css' %}">
+  {% block head %}{% endblock %}
+</head>
+<body class="site">
+  {% comment %}
+    Base para qualquer página fora do /admin. Use assim:
+
+      {% extends "base.html" %}
+      {% block titulo %}Minha página{% endblock %}
+      {% block conteudo %} ... {% endblock %}
+
+    Classes prontas no tema.css: .cartao, .resumo, .botao, .botao.sec, .tabela, .selo, .barras
+  {% endcomment %}
+  <header class="site-topo">
+    <a class="site-marca marca" href="/"><span class="marca-icone" aria-hidden="true">C</span>Coleta de Ações</a>
+    <nav class="site-nav">
+      {% block nav %}
+      <a href="/" {% if request.path == "/" %}class="ativo"{% endif %}>Início</a>
+      {% endblock %}
+      {% if user.is_staff %}
+        <a href="{% url 'admin:index' %}">Admin</a>
+      {% else %}
+        <a href="{% url 'admin:login' %}">Entrar</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  <main class="site-conteudo">
+    {% block conteudo %}{% endblock %}
+  </main>
+
+  <footer class="site-rodape">{% block rodape %}Coleta de Ações{% endblock %}</footer>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,69 @@
+{% extends "admin/index.html" %}
+{% load coleta %}
+{% comment %}Tela inicial do admin: cartões de resumo + lista de modelos + últimas ações.{% endcomment %}
+
+{% block content %}
+{% resumo_inicio as r %}
+<div id="content-main" class="app-list">
+  <div class="resumo">
+    <a class="cartao" href="{% url 'admin:acoes_usuario_changelist' %}?ativo__exact=1">
+      <div class="rotulo">Cadastros ativos</div><div class="valor">{{ r.usuarios }}</div>
+    </a>
+    <a class="cartao" href="{% url 'admin:acoes_sessao_changelist' %}?fim__isnull=True">
+      <div class="rotulo">Sessões em andamento</div><div class="valor">{{ r.sessoes_abertas }}</div>
+    </a>
+    <a class="cartao" href="{% url 'admin:acoes_acao_changelist' %}?criado_em__date={{ r.hoje }}">
+      <div class="rotulo">Ações hoje</div><div class="valor">{{ r.acoes_hoje }}</div>
+    </a>
+    <div class="cartao">
+      <div class="rotulo">Ações nos últimos 7 dias</div><div class="valor">{{ r.acoes_7d }}</div>
+    </div>
+    <div class="cartao">
+      <div class="rotulo">Tempo de reação médio</div>
+      <div class="valor">{% if r.tr_medio is not None %}{{ r.tr_medio|floatformat:2 }}<small>s</small>{% else %}—{% endif %}</div>
+    </div>
+  </div>
+
+  {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}
+</div>
+{% endblock %}
+
+{% block sidebar %}
+{% ultimas_acoes 8 as ultimas %}
+<div id="content-related">
+  <div class="module" id="ultimas-acoes">
+    <h2>Últimas ações</h2>
+    {% if ultimas %}
+    <ul class="actionlist">
+      {% for a in ultimas %}
+      <li>
+        <a href="{% url 'admin:acoes_acao_change' a.pk %}">{{ a.usuario.nome }}</a>
+        <span class="selo">{{ a.get_tipo_display }}</span><br>
+        <span class="mini quiet">{{ a.fase|default:"sem fase" }} · {{ a.criado_em|date:"d/m H:i" }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p style="padding: 0 12px">Nenhuma ação registrada ainda.</p>
+    {% endif %}
+  </div>
+
+  <div class="module" id="recent-actions-module">
+    <h2>Minhas alterações no admin</h2>
+    {% load log %}
+    {% get_admin_log 6 as admin_log for_user user %}
+    {% if not admin_log %}
+    <p style="padding: 0 12px">Nenhuma.</p>
+    {% else %}
+    <ul class="actionlist">
+      {% for entry in admin_log %}
+      <li class="{% if entry.is_addition %}addlink{% endif %}{% if entry.is_change %}changelink{% endif %}{% if entry.is_deletion %}deletelink{% endif %}">
+        {% if entry.is_deletion or not entry.get_admin_url %}{{ entry.object_repr }}{% else %}<a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>{% endif %}
+        <br><span class="mini quiet">{{ entry.content_type.name|capfirst }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
